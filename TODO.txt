@@ -1,0 +1,5 @@
+- think of a good idea for the game
+- create basic Graphical elements
+- create a basic save and load system that works
+- make the game customizable (.jsons or custom format)
+- organize the source code
