@@ -109,3 +109,33 @@ jobs:
         with:
           name: macBuild
           path: export/macos/bin
+  buildWeb:
+    runs-on: web
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.2.5
+      # Runs a set of commands using the runners shell
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install lime
+          haxelib install openfl
+          haxelib install flixel
+          haxelib run lime setup flixel
+          haxelib run lime setup
+          haxelib install flixel-tools
+          haxelib run flixel-tools setup
+      - name: Create Version Tag
+        run: echo "${{github.run_id}}" > VERSION
+      - name: Compile
+        run: haxelib run lime build html5 --app-version="4.0.0-${{ github.run_id}}"
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: webBuild
+          path: export/html5/bin
